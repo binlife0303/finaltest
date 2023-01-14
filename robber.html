@@ -9,7 +9,6 @@
 				font: 50px arial,sans-serif,medium;
                 text-align: center;
 			}
-
 		</style>	
 		<script>
 			function start(){
@@ -19,7 +18,7 @@
   				setInterval(function(){
     				number -- ;
     				if(number <= 0 )
-      					number = 0;
+						number = 0;
     					timer.innerText = number + 0 }, 1000);
 			}
 			function log_msg(msg) {
@@ -32,7 +31,6 @@
 					/*if(window.location.hostname) {
 						host = "ws://" + window.location.hostname + ":4545/";
 					}*/
-
 					s = new WebSocket(host); //建立socket元件
 					//設定幾個主要事件
 					s.onopen = function (e) { log_msg("connected..."); };
@@ -57,15 +55,15 @@
 				//取得class是 "cell" 的元件
 				const cells = document.querySelectorAll(".cell");
 				//逐一設定onclick事件
+				var mySign=0;
 				cells.forEach(function(el) {
 					el.onclick=function() { 
 						id=this.id;
 						//console.log(id);
 							//取得使用的符號
-						
-						if (document.getElementById('sign').value == '1') {
+						if (document.getElementById('sign').value == 'A') {
 							if(this.innerHTML=='0') { //若格子尚未被選
-								let mySign=document.getElementById('sign').value;
+								mySign=1;
 								s.send(id+","+mySign);
 							//取得使用的符號
 							}
@@ -76,16 +74,19 @@
 							//把格子id跟使用的符號傳給socket server
 							
 						}
-                        if (document.getElementById('sign').value == '-1'){
+                        if (document.getElementById('sign').value == 'B'){
+						
 							if(this.innerHTML=='0') { //若格子尚未被選
-								let mySign=document.getElementById('sign').value;
+								mySign=-1;
+								s.send(id+","+mySign);
 							//取得使用的符號
 							}
 							else {
 								mySign--;
+								s.send(id+","+mySign);
 							}
 							//把格子id跟使用的符號傳給socket server
-							s.send(id+","+mySign);
+							
 						
 						
 						
@@ -108,12 +109,15 @@
 	</head>
 <body >
 	即時搶地遊戲30秒<br/>
-	輸入玩家訊息(1或-1)<input type='text' value='' id='sign'>
+	輸入玩家訊息(A或B)<input type='text' value='' id='sign'>
     <div id="timer">
 		30
 	  </div>
 	  
 	  <button onclick="start(),doInit()">start</button>
+	<div id="result">
+		winner is 
+	</div>
 	<table border="1" width="500px" height="500px">
 	<tr><td class='cell' id='00'>0</td><td  class='cell' id='10'>0</td><td  class='cell' id='20'>0</td><td  class='cell' id='30'>0</td><td  class='cell' id='40'>0</td></tr>
     <tr><td class='cell' id='01'>0</td><td  class='cell' id='11'>0</td><td  class='cell' id='21'>0</td><td  class='cell' id='31'>0</td><td  class='cell' id='41'>0</td></tr>
