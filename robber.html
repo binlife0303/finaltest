@@ -12,13 +12,23 @@
 
 		</style>	
 		<script>
+			function start(){
+			//按下 start 後 id 為 timer 的 DIV 內容可以開始倒數到到 0。 
+  				var timer = document.querySelector("#timer");
+  				var number = 30;
+  				setInterval(function(){
+    				number -- ;
+    				if(number <= 0 )
+      					number = 0;
+    					timer.innerText = number + 0 }, 1000);
+			}
 			function log_msg(msg) {
 				console.log( msg);
 			}
 			var s; //socket object for connection
 			function doInit() {
 				try {
-					var host = "ws://localhost:4545/"; //設定socker server的ip:port
+					var host = "ws://10.99.1.150:4545/"; //設定socker server的ip:port
 					/*if(window.location.hostname) {
 						host = "ws://" + window.location.hostname + ":4545/";
 					}*/
@@ -51,28 +61,17 @@
 					el.onclick=function() { 
 						id=this.id;
 						//console.log(id);
-						if(this.innerHTML=='0') { //若格子尚未被選
 							//取得使用的符號
-                            mySign=0;
-                            if (document.getElementById('sign').value == 'player1') {
-                                let mySign = mySign+1;
-                            }
-                            else {
-                                let mySign = mySign-1;
-                            }
-							//把格子id跟使用的符號傳給socket server
-							s.send(id+","+mySign);
-						}
-                        else { //若格子被選
-                            if (document.getElementById('sign').value == 'player1') {
-                                let mySign = mySign+1;
-                            }
-                            else {
-                                let mySign = mySign-1;
-                            }
-							//把格子id跟使用的符號傳給socket server
-							s.send(id+","+mySign);
+                        let mySign = 0;
+                        if (document.getElementById('sign').value == 'player1') {
+                            mySign = mySign+1;
+							
                         }
+                        else {
+                            mySign = -1;
+                        }
+							//把格子id跟使用的符號傳給socket server
+						s.send(id+","+mySign);
 					}
 				});
 			}
@@ -84,10 +83,14 @@
 			}
 		</script>		
 	</head>
-<body onload="doInit()">
+<body >
 	即時搶地遊戲30秒<br/>
-	輸入玩家訊息(player1或player2)<input type='text' value='player1' id='sign'>
-    <button>開始遊戲</button>
+	輸入玩家訊息(player1或player2)<input type='text' value='' id='sign'>
+    <div id="timer">
+		30
+	  </div>
+	  
+	  <button onclick="start(),doInit()">start</button>
 	<table border="1" width="500px" height="500px">
 	<tr><td class='cell' id='00'>0</td><td  class='cell' id='10'>0</td><td  class='cell' id='20'>0</td><td  class='cell' id='30'>0</td><td  class='cell' id='40'>0</td></tr>
     <tr><td class='cell' id='01'>0</td><td  class='cell' id='11'>0</td><td  class='cell' id='21'>0</td><td  class='cell' id='31'>0</td><td  class='cell' id='41'>0</td></tr>

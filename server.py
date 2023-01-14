@@ -12,7 +12,7 @@ async def handler(websocket, path):
 	async for message in websocket:
 		print(message,'received from client') #print to console
 		if message=='getUsers':
-			websock.send("USERS," + len(clients))
+			websocket.send("USERS," + len(clients))
 		else:
 			await brocast(message) #send message to all clents
 
@@ -34,6 +34,6 @@ loop = asyncio.new_event_loop() #get an event loop
 asyncio.set_event_loop(loop) #set the event loop to asyncio
 
 loop.run_until_complete(
-	websockets.serve(handler, '', 4545) #setup the websocket service and handler
+	websockets.serve(handler, '10.99.1.150', 4545) #setup the websocket service and handler
 	) #hook to localhost:4545
 loop.run_forever() #keep it running
