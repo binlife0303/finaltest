@@ -62,30 +62,43 @@
 						id=this.id;
 						//console.log(id);
 							//取得使用的符號
-                        let mySign = 0;
-                        if (document.getElementById('sign').value == 'player1') {
-                            mySign = mySign+1;
-							
-                        }
-                        else {
-                            mySign = -1;
-                        }
+						
+						if (document.getElementById('sign').value == '1') {
+							if(this.innerHTML=='0') { //若格子尚未被選
+								let mySign=document.getElementById('sign').value;
+							//取得使用的符號
+
 							//把格子id跟使用的符號傳給socket server
+							s.send(id+","+mySign);
+						}
+                            mySign++;
+							
+						}
+						else {
+                            mySign--;
+							
+						}
 						s.send(id+","+mySign);
+						
+						
+                        //把格子id跟使用的符號傳給socket server
+						
 					}
 				});
 			}
 			
 			//設定格子的符號
 			function setCell(id,sign) {
+				
 				document.getElementById(id).innerHTML = sign;
 				//ce.value=sign;
-			}
+			
+		}
 		</script>		
 	</head>
 <body >
 	即時搶地遊戲30秒<br/>
-	輸入玩家訊息(player1或player2)<input type='text' value='' id='sign'>
+	輸入玩家訊息(1或-1)<input type='text' value='' id='sign'>
     <div id="timer">
 		30
 	  </div>
