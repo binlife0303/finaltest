@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<html>
+  <head>
+		<title>搶地遊戲</title>
+		<style>
+			.cell {
+				border: dotted 1px #363636;
+				font: 50px arial,sans-serif,medium;
+                text-align: center;
+			}
+
+		</style>	
+		<script>
+			function log_msg(msg) {
+				console.log( msg);
+			}
+			var s; //socket object for connection
+			function doInit() {
+				try {
+					var host = "ws://localhost:4545/"; //設定socker server的ip:port
+					/*if(window.location.hostname) {
+						host = "ws://" + window.location.hostname + ":4545/";
+					}*/
+
+					s = new WebSocket(host); //建立socket元件
+					//設定幾個主要事件
+					s.onopen = function (e) { log_msg("connected..."); };
+					s.onclose = function (e) { log_msg("connection closed."); };
+					s.onerror = function (e) { log_msg("connection error."); };
+					
+					//當server送訊息來時
+					s.onmessage = function (e) { 
+						log_msg("message: " + e.data);
+						//e.data是Socket server送來的訊息
+						//用,來切割訊息
+						strs = e.data.split(',');
+						//解讀各段訊息的內容
+						cellID=strs[0]; //個子的ID
+						cellSign=strs[1]; //使用的符號
+						setCell(cellID,cellSign) //改格子的符號
+					};
+				} catch (ex) {
+					log_msg("connection exception:" + ex);
+				}	 
+				
+				//取得class是 "cell" 的元件
+				const cells = document.querySelectorAll(".cell");
+				//逐一設定onclick事件
+				cells.forEach(function(el) {
+					el.onclick=function() { 
+						id=this.id;
+						//console.log(id);
+						if(this.innerHTML=='0') { //若格子尚未被選
+							//取得使用的符號
+                            mySign=0;
+                            if (document.getElementById('sign').value == 'player1') {
+                                let mySign = mySign+1;
+                            }
+                            else {
+                                let mySign = mySign-1;
+                            }
+							//把格子id跟使用的符號傳給socket server
+							s.send(id+","+mySign);
+						}
+                        else { //若格子被選
+                            if (document.getElementById('sign').value == 'player1') {
+                                let mySign = mySign+1;
+                            }
+                            else {
+                                let mySign = mySign-1;
+                            }
+							//把格子id跟使用的符號傳給socket server
+							s.send(id+","+mySign);
+                        }
+					}
+				});
+			}
+			
+			//設定格子的符號
+			function setCell(id,sign) {
+				document.getElementById(id).innerHTML = sign;
+				//ce.value=sign;
+			}
+		</script>		
+	</head>
+<body onload="doInit()">
+	即時搶地遊戲30秒<br/>
+	輸入玩家訊息(player1或player2)<input type='text' value='player1' id='sign'>
+    <button>開始遊戲</button>
+	<table border="1" width="500px" height="500px">
+	<tr><td class='cell' id='00'>0</td><td  class='cell' id='10'>0</td><td  class='cell' id='20'>0</td><td  class='cell' id='30'>0</td><td  class='cell' id='40'>0</td></tr>
+    <tr><td class='cell' id='01'>0</td><td  class='cell' id='11'>0</td><td  class='cell' id='21'>0</td><td  class='cell' id='31'>0</td><td  class='cell' id='41'>0</td></tr>
+    <tr><td class='cell' id='02'>0</td><td  class='cell' id='12'>0</td><td  class='cell' id='22'>0</td><td  class='cell' id='32'>0</td><td  class='cell' id='42'>0</td></tr>
+    <tr><td class='cell' id='03'>0</td><td  class='cell' id='13'>0</td><td  class='cell' id='23'>0</td><td  class='cell' id='33'>0</td><td  class='cell' id='43'>0</td></tr>
+    <tr><td class='cell' id='04'>0</td><td  class='cell' id='14'>0</td><td  class='cell' id='24'>0</td><td  class='cell' id='34'>0</td><td  class='cell' id='44'>0</td></tr>
+</table>
+</body>
+</html>
