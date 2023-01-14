@@ -66,21 +66,31 @@
 						if (document.getElementById('sign').value == '1') {
 							if(this.innerHTML=='0') { //若格子尚未被選
 								let mySign=document.getElementById('sign').value;
+								s.send(id+","+mySign);
 							//取得使用的符號
-
+							}
+							else {
+								mySign++;
+								s.send(id+","+mySign);
+							}
+							//把格子id跟使用的符號傳給socket server
+							
+						}
+                        if (document.getElementById('sign').value == '-1'){
+							if(this.innerHTML=='0') { //若格子尚未被選
+								let mySign=document.getElementById('sign').value;
+							//取得使用的符號
+							}
+							else {
+								mySign--;
+							}
 							//把格子id跟使用的符號傳給socket server
 							s.send(id+","+mySign);
-						}
-                            mySign++;
-							
-						}
-						else {
-                            mySign--;
-							
-						}
-						s.send(id+","+mySign);
 						
 						
+						
+						
+						}
                         //把格子id跟使用的符號傳給socket server
 						
 					}
